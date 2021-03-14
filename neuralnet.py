@@ -199,7 +199,7 @@ class NNClass:
         """ Plot loss curve from NN """
         fig, axes = plt.subplots()
 
-        plt.plot(self.instance.loss_curve_)
+        plt.plot(self.instance.fitness_curve)
         plt.title(f"Loss Curve for Neural Networks")
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
