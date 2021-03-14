@@ -1,0 +1,164 @@
+{
+    "NN": {
+        "file": "churn_modelling_mod.csv",
+        "params": {
+            "hidden_layers": [7, 7],
+            "learning_rate": 0.001,
+            "activation": "relu",
+            "clip_max": 1e-3
+        },
+        "optimizers": {
+            "RHC": {
+                "max_iters": 1000,
+                "restarts": 60,
+                "temperature": 10,
+                "pop_size": 100,
+                "mutation": 0.1,
+                "max_attempts": 10
+            },
+            "SA": {
+                "max_iters": 1000,
+                "restarts": 20,
+                "temperature": [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
+                "pop_size": 100,
+                "mutation": 0.1,
+                "max_attempts": 10
+            },
+            "GA": {
+                "max_iters": 1000,
+                "restarts": 20,
+                "temperature": 10,
+                "pop_size": 500,
+                "mutation": 0.1,
+                "max_attempts": 10
+            }
+        }
+    },
+    "FourPeaks": {
+        "params": {
+            "length": 80,
+            "t_pct": [0.1],
+            "maximize":"True",
+            "max_val": 2
+        },
+        "optimizers": {
+            "RHC": {
+                "seed": 14,
+                "iteration_list": [100],
+                "max_attempts": 50,
+                "restart_list": [20]
+            },
+            "SA": {
+                "seed": 14,
+                "iteration_list": [5000],
+                "max_attempts": 50,
+                "temperature_list": [35]
+            },
+            "GA": {
+                "seed": 14,
+                "iteration_list": [5000],
+                "max_attempts": 100,
+                "population_sizes": [250],
+                "mutation_rates": [0.8]
+            },
+            "MIMIC": {
+                "seed": 14,
+                "iteration_list": [50],
+                "max_attempts": 15,
+                "population_sizes": [50],
+                "keep_percent_list": [0.2],
+                "use_fast_mimic": "True"
+            }
+        }
+    },
+    "Knapsack": {
+        "params": {
+            "length": 5,
+            "weights": [
+                10,
+                5,
+                2,
+                8,
+                15
+            ],
+            "values": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "max_weight_pct": 1.0,
+            "maximize": "True",
+            "max_val": 2
+        },
+        "optimizers": {
+            "RHC": {
+                "seed": 14,
+                "iteration_list": [3000],
+                "max_attempts": 20,
+                "restart_list": [20]
+            },
+            "SA": {
+                "seed": 14,
+                "iteration_list": [2000],
+                "max_attempts": 30,
+                "temperature_list": [2]
+            },
+            "GA": {
+                "seed": 14,
+                "iteration_list": [2000],
+                "max_attempts": 10,
+                "population_sizes": [200],
+                "mutation_rates": [0.1]
+            },
+            "MIMIC": {
+                "seed": 14,
+                "iteration_list": [1000],
+                "max_attempts": 15,
+                "population_sizes": [275],
+                "keep_percent_list": [0.25],
+                "use_fast_mimic": "True"
+            }
+        }
+    },
+    "MaxKColor": {
+        "params": {
+            "length": 80,
+            "nodes": 6,
+            "max_connections": 200,
+            "max_colors": 3,
+            "maximize": "True",
+            "max_val": 2
+        },
+        "optimizers": {
+            "RHC": {
+                "seed": 14,
+                "iteration_list": [5000],
+                "max_attempts": 5,
+                "restart_list": [80]
+            },
+            "SA": {
+                "seed": 14,
+                "iteration_list": [5000],
+                "max_attempts": 5,
+                "temperature_list": [45]
+            },
+            "GA": {
+                "seed": 14,
+                "iteration_list": [5000],
+                "max_attempts": 5,
+                "population_sizes": [100],
+                "mutation_rates": [0.2]
+            },
+            "MIMIC": {
+                "seed": 14,
+                "iteration_list": [5000],
+                "max_attempts": 25,
+                "population_sizes": [250],
+                "keep_percent_list": [0.2],
+                "use_fast_mimic": "True"
+            }
+        }
+    }
+}
