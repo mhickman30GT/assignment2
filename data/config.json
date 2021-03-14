@@ -9,28 +9,28 @@
         },
         "optimizers": {
             "RHC": {
-                "max_iters": 1000,
-                "restarts": 60,
+                "max_iters": 12000,
+                "restarts": 20,
                 "temperature": 10,
                 "pop_size": 100,
                 "mutation": 0.1,
-                "max_attempts": 10
+                "max_attempts": 50
             },
             "SA": {
-                "max_iters": 1000,
+                "max_iters": 10000,
                 "restarts": 20,
-                "temperature": [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
+                "temperature": 5,
                 "pop_size": 100,
                 "mutation": 0.1,
-                "max_attempts": 10
+                "max_attempts": 50
             },
             "GA": {
-                "max_iters": 1000,
+                "max_iters": 12000,
                 "restarts": 20,
                 "temperature": 10,
-                "pop_size": 500,
+                "pop_size": 350,
                 "mutation": 0.1,
-                "max_attempts": 10
+                "max_attempts": 50
             }
         }
     },
