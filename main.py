@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import multiprocessing
+import time
 
 import problem as pro
 import pandas as pd
@@ -169,10 +170,10 @@ def plot_nn_curves(title, curve, hyperparameter, outdir):
     # Format and output all graphs
     fit_ax.grid(True)
     fit_ax.legend(loc="best")
-    fit_fig.savefig(os.path.join(outdir, f"{hyperparameter}_fitness_curve.png"))
+    fit_fig.savefig(os.path.join(outdir, f"{title}_{hyperparameter}_fitness_curve.png"))
 
     l_ax.grid(True)
-    l_fig.savefig(os.path.join(outdir, f"{hyperparameter}_loss_curve.png"))
+    l_fig.savefig(os.path.join(outdir, f"{title}_{hyperparameter}_loss_curve.png"))
 
 def find_optname(opt):
     """ Finds the neural net name for an optimizer """
@@ -284,7 +285,6 @@ def main():
                     if opt == "Random Hill Climb":
                         if not rhc_curve.empty:
                             rhc_curve = rhc_curve.append(max_curve, ignore_index=True)
-                        else:
                             rhc_curve = pd.DataFrame(max_curve, index=[0])
 
                     elif opt == "Simulated Annealing":
@@ -315,7 +315,10 @@ def main():
         datafile = n_config["file"]
         filepath = os.path.join(os.path.join(PATH, "data"), datafile)
         nnlist = list()
+        tunedict = dict()
         tune_curve = pd.DataFrame()
+        hyperparameter = args.value
+        optimizer = args.opt
 
         if args.runtype == "plots":
             for opt, params in n_config["optimizers"].items():
@@ -328,23 +331,23 @@ def main():
                 nnlist.append(nnclass)
 
         elif args.runtype == "tuning":
-            hyperparameter = args.value
-            optimizer = args.opt
-
             # Tune NN hyperparams
             if optimizer == "NN":
+                tunedict["RHC"] = list()
+                tunedict["SA"] = list()
+                tunedict["GA"] = list()
                 hyper_values = p_config[args.value]
                 tune_config = p_config
                 for val in hyper_values:
                     tune_config[hyperparameter] = val
                     run_config["val"] = val
-                    plotname = f'{hyperparameter}{val}'
                     for opt, params in n_config["optimizers"].items():
+                        plotname = f'{hyperparameter}{opt}{val}'
                         optname = find_optname(opt)
                         run_config["opt"] = optname
                         run_config["params"] = params
                         nnclass = nn.generate_nets(plotname, filepath, tune_config, run_config, out_dir)
-                        nnlist.append(nnclass)
+                        tunedict[opt].append(nnclass)
 
             # Tune optimizer parameters
             else:
@@ -362,21 +365,38 @@ def main():
                     nnclass = nn.generate_nets(plotname, filepath, p_config, run_config, out_dir)
                     nnlist.append(nnclass)
 
-        # Init pool
-        pool = pro.Pool(nnlist, core_count)
+        # Check for problem tuning
+        if args.runtype == "tuning" and optimizer == "NN":
+            # Loop through opts
+            for opt, runlist in tunedict.items():
+                # Init pool
+                pool = pro.Pool(runlist, core_count)
+                # Run the pool
+                pool.run()
+                # Save off results
+                tunedict[opt] = pool.algorithms
+        else:
+            # Init pool
+            pool = pro.Pool(nnlist, core_count)
+            # Run the pool
+            pool.run()
+            # Save off results
+            nnlist = pool.algorithms
 
-        # Run the pool
-        pool.run()
-
-        # Save off results
-        nnlist = pool.algorithms
-
+        # Process results
         if args.runtype == "plots":
             # Generate LCA curves
             for net in nnlist:
+                start_time = time.time()
                 net.plot_lca()
                 net.plot_loss()
-        else:
+                plot_time = round(time.time() - start_time,2)
+                totaltime = net.runtime + plot_time
+                print(f"{net.opt_type} Run time: {net.runtime}")
+                print(f"{net.opt_type} PLot time: {plot_time}")
+                print(f"{net.opt_type} Total time: {totaltime}")
+
+        elif optimizer != "NN":
             # Generate tuning curves
             for net in nnlist:
                 # Create data row
@@ -390,7 +410,26 @@ def main():
                     tune_curve = tune_curve.append(res, ignore_index=True)
                 else:
                     tune_curve = pd.DataFrame(res, index=[0])
-            plot_nn_curves("Neural Network", tune_curve, hyperparameter, out_dir)
+            plot_nn_curves(optimizer, tune_curve, hyperparameter, out_dir)
+        else:
+            for opt, results in tunedict.items():
+                tune_curve = pd.DataFrame()
+                # Generate tuning curves
+                for net in results:
+                    # Create data row
+                    res = dict()
+                    res[hyperparameter] = f'{net.tune_value}'
+                    res["Train Accuracy"] = net.acc_train[0]
+                    res["Test Accuracy"] = net.acc_test[0]
+                    res["Loss"] = net.loss[0]
+                    # Add to dataframe
+                    if not tune_curve.empty:
+                        tune_curve = tune_curve.append(res, ignore_index=True)
+                    else:
+                        tune_curve = pd.DataFrame(res, index=[0])
+                plot_nn_curves(opt, tune_curve, hyperparameter, out_dir)
+
+
 
 if __name__ == "__main__":
     main()

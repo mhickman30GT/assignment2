@@ -3,6 +3,7 @@ import os
 import contextlib
 import io
 import collections
+import time
 
 from sklearn import model_selection
 from sklearn import preprocessing
@@ -73,7 +74,7 @@ def generate_nets(exp_name, file, p_config, run_config, outdir):
                         clip_max=p_config["clip_max"],
                         # Opt Tuning Params
                         restarts=run_config["params"]["restarts"],
-                        schedule=mlrose.ExpDecay(run_config["params"]["temperature"]),
+                        schedule=mlrose.GeomDecay(run_config["params"]["temperature"]),
                         pop_size=run_config["params"]["pop_size"],
                         mutation_prob=run_config["params"]["mutation"],
                         max_attempts=run_config["params"]["max_attempts"],
@@ -103,9 +104,11 @@ class NNClass:
         self.curves = dict()
         self.random_seed = RANDOM_SEED
         self.core_count = round(multiprocessing.cpu_count() * CORE_COUNT_PERCENTAGE)
+        self.runtime = None
         # For tuning runs
         self.tune_results = dict()
         self.tune_value = self.config["val"]
+        self.opt_type = self.config["opt"]
         self.acc_train = None
         self.acc_test = None
         self.loss = None
@@ -119,6 +122,7 @@ class NNClass:
     def run(self):
         """ Run the neural net """
         print(f"Running {self.title}")
+        start_time = time.time()
 
         # Pre-process data
         self.dataset.process()
@@ -132,6 +136,8 @@ class NNClass:
         self.acc_test = accuracy_score(self.dataset.y_test, self.instance.predict(self.dataset.x_test)),
         self.loss = self.instance.loss,
 
+        # Save off runtime to 2 digits
+        self.runtime = round(time.time() - start_time,2)
 
     def plot_lca(self):
         """ Plots LCA curve """
@@ -145,7 +151,6 @@ class NNClass:
         train_scores_mean = np.mean(self.train_scores, axis=1)
         train_scores_std = np.std(self.train_scores, axis=1)
         test_scores_mean = np.mean(self.test_scores, axis=1)
-        test_scores_std = np.std(self.test_scores, axis=1)
         fit_times_mean = np.mean(self.fit_times, axis=1)
         fit_times_std = np.std(self.fit_times, axis=1)
 
