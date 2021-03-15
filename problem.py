@@ -128,10 +128,19 @@ def generate_problems(exp_name, problem, p_config, runtype, run_config, outdir):
         problem_class = ProblemClass(exp_name, name, problem_inst, runtype, run_config, outdir)
 
     elif problem == 'Knapsack':
+        # Generate weights and values based on length
+        values = list()
+        weights = list()
+        for v in range(1, p_config["length"] + 1):
+            values.append(p_config["values"][v])
+        for v in range(1, p_config["length"] + 1):
+            weights.append(p_config["weights"][v])
+
         # Generate its instance
         problem_inst = mlrose.KnapsackOpt(length=p_config["length"],
-                                          weights=p_config["weights"],
-                                          values=p_config["values"],
+                                          weights=weights,
+                                          values=values,
+                                          max_weight_pct=p_config["max_weight_pct"],
                                           maximize=p_config["maximize"],
                                           max_val=p_config["max_val"])
         name = "Knapsack"
