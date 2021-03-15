@@ -1,71 +1,71 @@
 {
     "NN": {
-        "file": "churn_modelling_mod.csv",
-        "params": {
-            "hidden_layers": [7, 7],
-            "learning_rate": 0.001,
-            "activation": "relu",
-            "clip_max": 1e-3
+    "file": "churn_modelling_mod.csv",
+    "params": {
+        "hidden_layers": [20, 20],
+        "learning_rate": 0.001,
+        "activation": "relu",
+        "clip_max": 1e-3
+    },
+    "optimizers": {
+        "RHC": {
+            "max_iters": 5000,
+            "restarts": 20,
+            "temperature": 10,
+            "pop_size": 100,
+            "mutation": 0.1,
+            "max_attempts": 30
         },
-        "optimizers": {
-            "RHC": {
-                "max_iters": 12000,
-                "restarts": 20,
-                "temperature": 10,
-                "pop_size": 100,
-                "mutation": 0.1,
-                "max_attempts": 50
-            },
-            "SA": {
-                "max_iters": 10000,
-                "restarts": 20,
-                "temperature": 5,
-                "pop_size": 100,
-                "mutation": 0.1,
-                "max_attempts": 50
-            },
-            "GA": {
-                "max_iters": 12000,
-                "restarts": 20,
-                "temperature": 10,
-                "pop_size": 350,
-                "mutation": 0.1,
-                "max_attempts": 50
-            }
+        "SA": {
+            "max_iters": 1000,
+            "restarts": 20,
+            "temperature": 4,
+            "pop_size": 100,
+            "mutation": 0.1,
+            "max_attempts": 20
+        },
+        "GA": {
+            "max_iters": 1000,
+            "restarts": 20,
+            "temperature": 10,
+            "pop_size": 250,
+            "mutation": 0.1,
+            "max_attempts": 40
+        }
         }
     },
     "FourPeaks": {
         "params": {
-            "length": 80,
-            "t_pct": [0.1],
+            "length": 100,
+            "t_pct": 0.1,
             "maximize":"True",
             "max_val": 2
         },
         "optimizers": {
             "RHC": {
                 "seed": 14,
-                "iteration_list": [100],
+                "iteration_list": [1000],
                 "max_attempts": 50,
-                "restart_list": [20]
+                "restart_list": [60]
             },
             "SA": {
                 "seed": 14,
                 "iteration_list": [5000],
-                "max_attempts": 50,
-                "temperature_list": [35]
+                "max_attempts": 100,
+                "temperature_list": [1.5]
             },
             "GA": {
                 "seed": 14,
                 "iteration_list": [5000],
                 "max_attempts": 100,
-                "population_sizes": [250],
-                "mutation_rates": [0.8]
+                "population_sizes": [200],
+                "mutation_rates": [0.45]
             },
             "MIMIC": {
                 "seed": 14,
-                "iteration_list": [50],
-                "max_attempts": 15,
-                "population_sizes": [50],
+                "iteration_list": [200],
+                "max_attempts": 50,
+                "population_sizes": [240],
                 "keep_percent_list": [0.2],
                 "use_fast_mimic": "True"
             }
@@ -73,50 +73,38 @@
     },
     "Knapsack": {
         "params": {
-            "length": 5,
-            "weights": [
-                10,
-                5,
-                2,
-                8,
-                15
-            ],
-            "values": [
-                1,
-                2,
-                3,
-                4,
-                5
-            ],
-            "max_weight_pct": 1.0,
+            "length": 50,
+            "max_weight_pct": 0.4,
+            "weights": [ 10, 6, 7, 1, 3, 4, 5, 6, 8, 2, 10, 15, 3, 4, 5, 7, 21, 11, 12, 9, 7, 5, 14, 2, 24, 29, 31, 1, 15, 16, 17, 21, 25, 27, 28, 3, 4, 5, 7, 4, 9, 10, 31, 14, 14, 14, 35, 7, 3, 9, 4, 12, 13, 15, 18, 21, 24, 28, 3, 4, 7, 8, 2, 31, 35, 41, 22, 25, 26, 27, 28, 10, 12, 7, 4, 5, 7, 10, 15, 33],
+            "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 20, 22, 25, 27, 29, 30, 31, 32, 33, 34, 35, 37, 39, 40, 41, 42, 44, 46, 47, 48, 49, 50, 51, 53, 54, 55, 56, 58, 60, 62, 63, 64, 66, 68, 70, 71, 72, 75, 76, 77, 78, 80, 81, 84, 85, 86, 87, 88, 89, 90, 92, 94, 95, 96, 97, 98, 99, 100],
             "maximize": "True",
             "max_val": 2
         },
         "optimizers": {
             "RHC": {
                 "seed": 14,
-                "iteration_list": [3000],
-                "max_attempts": 20,
-                "restart_list": [20]
+                "iteration_list": [100],
+                "max_attempts": 30,
+                "restart_list": [90]
             },
             "SA": {
                 "seed": 14,
-                "iteration_list": [2000],
-                "max_attempts": 30,
-                "temperature_list": [2]
+                "iteration_list": [5000],
+                "max_attempts": 200,
+                "temperature_list": [460]
             },
             "GA": {
                 "seed": 14,
-                "iteration_list": [2000],
-                "max_attempts": 10,
-                "population_sizes": [200],
+                "iteration_list": [50],
+                "max_attempts": 15,
+                "population_sizes": [1000],
                 "mutation_rates": [0.1]
             },
             "MIMIC": {
                 "seed": 14,
-                "iteration_list": [1000],
-                "max_attempts": 15,
-                "population_sizes": [275],
+                "iteration_list": [20],
+                "max_attempts": 10,
+                "population_sizes": [200],
                 "keep_percent_list": [0.25],
                 "use_fast_mimic": "True"
             }
@@ -124,39 +112,39 @@
     },
     "MaxKColor": {
         "params": {
-            "length": 80,
-            "nodes": 6,
-            "max_connections": 200,
-            "max_colors": 3,
+            "length": 200,
+            "nodes": 40,
+            "max_connections": 180,
+            "max_colors": 2,
             "maximize": "True",
             "max_val": 2
         },
         "optimizers": {
             "RHC": {
                 "seed": 14,
-                "iteration_list": [5000],
-                "max_attempts": 5,
-                "restart_list": [80]
+                "iteration_list": [1000],
+                "max_attempts": 20,
+                "restart_list": [85]
             },
             "SA": {
                 "seed": 14,
-                "iteration_list": [5000],
-                "max_attempts": 5,
-                "temperature_list": [45]
+                "iteration_list": [1000],
+                "max_attempts": 20,
+                "temperature_list": [30]
             },
             "GA": {
                 "seed": 14,
-                "iteration_list": [5000],
-                "max_attempts": 5,
-                "population_sizes": [100],
-                "mutation_rates": [0.2]
+                "iteration_list": [200],
+                "max_attempts": 15,
+                "population_sizes": [50],
+                "mutation_rates": [0.3]
             },
             "MIMIC": {
                 "seed": 14,
-                "iteration_list": [5000],
-                "max_attempts": 25,
-                "population_sizes": [250],
-                "keep_percent_list": [0.2],
+                "iteration_list": [200],
+                "max_attempts": 10,
+                "population_sizes": [120],
+                "keep_percent_list": [0.25],
                 "use_fast_mimic": "True"
             }
         }
